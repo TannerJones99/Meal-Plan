@@ -23,6 +23,7 @@ public class FoodSearch extends AppCompatActivity {
                 EditText editText = findViewById(R.id.search_edit_text);
                 String search_term = editText.getText().toString();
                 apiDownload = new ApiDownload(search_term, getApplicationContext());
+                apiDownload.execute();
             }
         });
     }
