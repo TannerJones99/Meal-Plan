@@ -6,9 +6,9 @@ public class MealPlan {
     private String name;
     private ArrayList<MealList> mealsList;
 
-    public MealPlan(String name, ArrayList<MealList> mealsList) {
+    public MealPlan(String name) {
         this.name = name;
-        this.mealsList = mealsList;
+        mealsList = new ArrayList<>();
     }
 
     public String getName() {
@@ -18,4 +18,5 @@ public class MealPlan {
     public ArrayList<MealList> getMealsList() {
         return mealsList;
     }
+
 }

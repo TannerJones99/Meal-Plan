@@ -1,29 +1,45 @@
 package com.tannerjones.mealplanner;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MealActivity extends AppCompatActivity {
+public class MealActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<MealPlan> mealPlans;
     MealPlanAdapter mealPlanAdapter;
+    Button addButton;
+    Button removeButton;
+    String planToRemove;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mealPlans = new ArrayList<>(); // temporary declaration until a way to save meal plans.
+        if(mealPlans.size() == 0){
+            addMealPlan();
+        }
         setContentView(R.layout.mealplanlayout);
+        addButton = findViewById(R.id.AddMealPlan);
+        removeButton = findViewById(R.id.RemoveMealPlan);
+        addButton.setOnClickListener(this);
+        removeButton.setOnClickListener(this);
+        planToRemove = "";
     }
 
     @Override
@@ -34,6 +50,19 @@ public class MealActivity extends AppCompatActivity {
         rv.setLayoutManager(linearLayoutManager);
         mealPlanAdapter = new MealPlanAdapter();
         rv.setAdapter(mealPlanAdapter);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.AddMealPlan){
+            addMealPlan();
+        }
+        else if(view.getId() == R.id.RemoveMealPlan){
+            removeMealPlan();
+        }
+        else{
+            // recycler view on click
+        }
     }
 
     class MealPlanAdapter extends RecyclerView.Adapter<MealPlanHolder> {
@@ -72,11 +101,70 @@ public class MealActivity extends AppCompatActivity {
         }
     }
 
+    // adds a meal plan and gives it a default name value.
     public void addMealPlan(){
-        // class will pop up dialog that User will create a MealPlan object and add it to ArrayList.
+        MealPlan newMealPlan;
+        boolean nameAvaiable = true;
+        int planNumber = 1;
+        for(int i = 0; i < mealPlans.size(); i++){
+            if(mealPlans.get(i).getName().equals("Meal Plan "+(i+1))){
+                nameAvaiable = false;
+            }
+            planNumber = i + 1;
+        }
+        if(nameAvaiable){
+            newMealPlan = new MealPlan("Meal Plan" + planNumber);
+        }
+        else{
+            addMealPlan();
+        }
     }
 
+    // pops up a dialog that lets them delete
     public void removeMealPlan(){
-        // class will pop up dialog that user will delete a MealPlan
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Meal Plan");
+
+        // Converting names of meals plans to a String[];
+        String[] listOfMeals = new String[mealPlans.size()];
+        for(int i = 0; i < mealPlans.size(); i++){
+            listOfMeals[i] = mealPlans.get(i).getName();
+        }
+        int choice = -1;
+        builder.setSingleChoiceItems(listOfMeals, choice, null);
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ListView listView = ((AlertDialog) dialogInterface).getListView();
+                Object checkedItem = listView.getAdapter().getItem(listView.getCheckedItemPosition());
+
+                planToRemove = (String) checkedItem;
+                deleteMealByName(planToRemove);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.i("Cancel", "Cancelled remove");
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // returns the list of meal plans
+    public ArrayList<MealPlan> getMealPlans() {
+        return mealPlans;
+    }
+
+    public void deleteMealByName(String name){
+        for(int i = 0; i < mealPlans.size(); i++){
+            if(mealPlans.get(i).getName().equals(name)){
+                mealPlans.remove(mealPlans.get(i));
+            }
+        }
     }
 }
