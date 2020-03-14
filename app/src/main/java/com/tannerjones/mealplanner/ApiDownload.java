@@ -16,10 +16,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ApiDownload extends AsyncTask<Void, Void, String> {
+public class ApiDownload extends AsyncTask<Void, Void, TreeSet<String>> {
 
     private String search_term = "";
     private URL url;
@@ -28,6 +29,7 @@ public class ApiDownload extends AsyncTask<Void, Void, String> {
     // i.e.
     // https://api.nal.usda.gov/fdc/v1/search?api_key=YOUR_API_KEY&generalSearchInput=YOUR_INPUT
     public ApiDownload(String search_term, Context context) {
+        this.search_term = search_term;
         Uri.Builder builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/search").buildUpon();
         builder.appendQueryParameter("api_key", context.getResources().getString(R.string.api_key));
         builder.appendQueryParameter("generalSearchInput", search_term);
@@ -41,10 +43,10 @@ public class ApiDownload extends AsyncTask<Void, Void, String> {
 
     // Begin drawing data from JSON objects
     @Override
-    protected String doInBackground(Void... voids) {
+    protected TreeSet<String> doInBackground(Void... voids) {
         StringBuilder json = new StringBuilder();
+        TreeSet<String> foodIngredients = new TreeSet<>();
 
-        HashSet<String> foodSet = new HashSet<>();
         String result = null;
         try {
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -62,36 +64,28 @@ public class ApiDownload extends AsyncTask<Void, Void, String> {
             JSONArray foods = reader.getJSONArray("foods");
             for (int i = 0; i < foods.length(); i++) {
                 JSONObject food = foods.getJSONObject(i);
-                // Not sure what the ingredients section is
-                // Maybe just a String? View the API to better understand
-                JSONArray ingredients = food.getJSONArray("ingredients");
-                for (int j = 0; j < ingredients.length(); j++) {
-                    String ingredient = ingredients.getString(j);
-                    foodSet.add(ingredient);
+                if (food.getString("description").equals(search_term)) {
+                    // Not sure what the ingredients section is
+                    // Maybe just a String? View the API to better understand
+                    String ingredients = food.getString("ingredients");
+                    foodIngredients.add(ingredients);
                 }
-            }
 
-            result = "";
-            for (String t : foodSet) {
-                result += t + "\n";
             }
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Log.i("STACK 1", "Download Failed");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i("STACK 2", "Download Failed");
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.i("STACK 3", "Download Failed");
         }
 
-        return result;
+        return foodIngredients;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.i("FINAL", s + " Is this empty?");
+    protected void onPostExecute(TreeSet<String> s) {
+        FoodSearch.apiDownload = null;
     }
 }
