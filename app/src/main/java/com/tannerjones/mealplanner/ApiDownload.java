@@ -15,12 +15,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ApiDownload extends AsyncTask<Void, Void, TreeSet<String>> {
+public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
 
     private String search_term = "";
     private URL url;
@@ -43,9 +43,9 @@ public class ApiDownload extends AsyncTask<Void, Void, TreeSet<String>> {
 
     // Begin drawing data from JSON objects
     @Override
-    protected TreeSet<String> doInBackground(Void... voids) {
+    protected ArrayList<String> doInBackground(Void... voids) {
         StringBuilder json = new StringBuilder();
-        TreeSet<String> foodIngredients = new TreeSet<>();
+        ArrayList<String> foodDescription = new ArrayList<>();
 
         String result = null;
         try {
@@ -67,10 +67,9 @@ public class ApiDownload extends AsyncTask<Void, Void, TreeSet<String>> {
                 if (food.getString("description").equals(search_term)) {
                     // Not sure what the ingredients section is
                     // Maybe just a String? View the API to better understand
-                    String ingredients = food.getString("ingredients");
-                    foodIngredients.add(ingredients);
+                    String descriptions = food.getString("description");
+                    foodDescription.add(descriptions);
                 }
-
             }
 
         } catch (MalformedURLException e) {
@@ -81,11 +80,13 @@ public class ApiDownload extends AsyncTask<Void, Void, TreeSet<String>> {
             e.printStackTrace();
         }
 
-        return foodIngredients;
+        return foodDescription;
     }
 
     @Override
-    protected void onPostExecute(TreeSet<String> s) {
-        FoodSearch.apiDownload = null;
+    protected void onPostExecute(ArrayList<String> s) {
+        for (int i = 0; i < s.size(); i++) {
+            Log.i("NAME", s.get(i));
+        }
     }
 }
