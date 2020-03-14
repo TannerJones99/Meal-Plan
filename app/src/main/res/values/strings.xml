@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Meal Planner</string>
+    <string name="app_descrip">Creating mealplans for a healthier lifestyle.</string>
 </resources>
