@@ -64,12 +64,8 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
             JSONArray foods = reader.getJSONArray("foods");
             for (int i = 0; i < foods.length(); i++) {
                 JSONObject food = foods.getJSONObject(i);
-                if (food.getString("description").equals(search_term)) {
-                    // Not sure what the ingredients section is
-                    // Maybe just a String? View the API to better understand
-                    String descriptions = food.getString("description");
-                    foodDescription.add(descriptions);
-                }
+                String descriptions = food.getString("description");
+                foodDescription.add(descriptions);
             }
 
         } catch (MalformedURLException e) {
@@ -88,5 +84,6 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
         for (int i = 0; i < s.size(); i++) {
             Log.i("NAME", s.get(i));
         }
+        FoodSearch.apiDownload = null;
     }
 }
