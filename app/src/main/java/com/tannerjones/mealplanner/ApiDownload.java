@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -24,6 +23,7 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
 
     private String search_term = "";
     private URL url;
+    public ArrayList<Meal> meals;
 
     // Creates an FoodSearch URI using an api_key and a search term
     // i.e.

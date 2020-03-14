@@ -8,8 +8,6 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Food Details
-    // https://api.nal.usda.gov/fdc/v1/######?api_key=YOUR_API_KEY
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
