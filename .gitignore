@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 /app/src/main/res/values/apikeys.xml
+/app/src/main/res/values/secret.xml
