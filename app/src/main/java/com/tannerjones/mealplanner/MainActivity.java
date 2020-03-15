@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.view_plans).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getApplicationContext(), .class);
-                //startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), MealActivity.class);
+                startActivity(intent);
             }
         });
     }

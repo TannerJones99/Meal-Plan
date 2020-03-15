@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MealActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,14 +28,12 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
     Button addButton;
     Button removeButton;
     String planToRemove;
+    RecyclerView rv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mealPlans = new ArrayList<>(); // temporary declaration until a way to save meal plans.
-        if(mealPlans.size() == 0){
-            addMealPlan();
-        }
         setContentView(R.layout.mealplanlayout);
         addButton = findViewById(R.id.AddMealPlan);
         removeButton = findViewById(R.id.RemoveMealPlan);
@@ -45,11 +45,16 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        RecyclerView rv = findViewById(R.id.MealPlanRv);
+        Log.i("Started", "onStart");
+        rv = findViewById(R.id.MealPlanRv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
         mealPlanAdapter = new MealPlanAdapter();
         rv.setAdapter(mealPlanAdapter);
+        if(mealPlans.size() == 0){
+            addMealPlan();
+        }
+        mealPlanAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -104,20 +109,34 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
     // adds a meal plan and gives it a default name value.
     public void addMealPlan(){
         MealPlan newMealPlan;
-        boolean nameAvaiable = true;
         int planNumber = 1;
+        boolean nameAvailable = true;
+        ArrayList<Integer> planNums = new ArrayList<>();
         for(int i = 0; i < mealPlans.size(); i++){
-            if(mealPlans.get(i).getName().equals("Meal Plan "+(i+1))){
-                nameAvaiable = false;
+            if(mealPlans.size() != 0){
+                planNums.add(Integer.parseInt(mealPlans.get(i).getName().substring(mealPlans.get(i).getName().length()-1)));
             }
-            planNumber = i + 1;
         }
-        if(nameAvaiable){
-            newMealPlan = new MealPlan("Meal Plan" + planNumber);
+        int lowestNum = 1;
+        Collections.sort(planNums);
+        if(mealPlans.size() != 0) {
+            do {
+                for (int i = 0; i < planNums.size(); i++) {
+                    if (planNums.get(i) == planNumber) {
+                        nameAvailable = false;
+                        planNumber++;
+                    } else {
+                        nameAvailable = true;
+                    }
+                }
+            } while(!nameAvailable);
+            newMealPlan = new MealPlan("Meal Plan " + planNumber);
         }
         else{
-            addMealPlan();
+            newMealPlan = new MealPlan("Meal Plan 1");
         }
+        mealPlans.add(newMealPlan);
+        mealPlanAdapter.notifyDataSetChanged();
     }
 
     // pops up a dialog that lets them delete
@@ -164,6 +183,8 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
         for(int i = 0; i < mealPlans.size(); i++){
             if(mealPlans.get(i).getName().equals(name)){
                 mealPlans.remove(mealPlans.get(i));
+                mealPlanAdapter.notifyItemRemoved(i);
+                mealPlanAdapter.notifyItemRangeChanged(i, mealPlans.size());
             }
         }
     }
