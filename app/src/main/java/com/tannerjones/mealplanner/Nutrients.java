@@ -2,30 +2,30 @@ package com.tannerjones.mealplanner;
 
 public class Nutrients {
     private String name;
-    private String amount;
+    private int amount;
+    private int mealId;
     private String unit;
-    private Meal mealAssociated;
 
-    public Nutrients(String name, String amount, String unit, Meal meal) {
+    public Nutrients(String name, int amount, String unit, int mealId) {
         this.name = name;
         this.amount = amount;
         this.unit = unit;
-        this.mealAssociated = meal;
+        this.mealId = mealId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
+    }
+
+    public int getMealId() {
+        return mealId;
     }
 
     public String getUnit() {
         return unit;
-    }
-
-    public Meal getMealAssociated() {
-        return mealAssociated;
     }
 }

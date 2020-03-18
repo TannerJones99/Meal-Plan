@@ -6,35 +6,22 @@ This class will contain all information for a specific ingredient and handle all
 
 public class Ingredient {
     private String name;
-    private String code;
-    private String amount;
-    private String measure;
+    private int mealId;
     private boolean owned; // boolean that checks if the user has the ingredient or does not have.
-    private Meal mealAssociated;
 
-    public Ingredient(String name, String code, String amount, String measure, Meal meal) {
+
+    public Ingredient(String name, int mealId) {
         this.name = name;
-        this.code = code;
-        this.amount = amount;
-        this.measure = measure;
         this.owned = false;
-        this.mealAssociated = meal;
+        this.mealId = mealId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public String getMeasure() {
-        return measure;
+    public int getMealId() {
+        return mealId;
     }
 
     public boolean isOwned() {
@@ -43,9 +30,5 @@ public class Ingredient {
 
     public void switchOwned(){
         owned = !owned;
-    }
-
-    public Meal getMealAssociated() {
-        return mealAssociated;
     }
 }

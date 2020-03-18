@@ -9,17 +9,15 @@ This class will contain all information for a specific meal and handle all funct
 public class Meal {
     private String name;
     private ArrayList<Ingredient> ingredients;
-    private String id;
-    private String foodCode;
-    private String foodCategory;
+    private ArrayList<Nutrients> nutrients;
+    private int id;
 
 
-    public Meal(String name, ArrayList<Ingredient> ingredient, String id, String foodCode, String foodCategory) {
+    public Meal(String name, ArrayList<Ingredient> ingredient, ArrayList<Nutrients> nutrients, int id) {
         this.name = name;
         this.ingredients = ingredient;
+        this.nutrients = nutrients;
         this.id = id;
-        this.foodCode = foodCode;
-        this.foodCategory = foodCategory;
     }
 
     public String getName() {
@@ -30,15 +28,11 @@ public class Meal {
         return ingredients;
     }
 
-    public String getId() {
+    public ArrayList<Nutrients> getNutrients() {
+        return nutrients;
+    }
+
+    public int getId() {
         return id;
-    }
-
-    public String getFoodCode() {
-        return foodCode;
-    }
-
-    public String getFoodCategory() {
-        return foodCategory;
     }
 }

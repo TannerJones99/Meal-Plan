@@ -1,6 +1,5 @@
 package com.tannerjones.mealplanner;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,19 +18,20 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
+public class ApiDownload extends AsyncTask<Void, Void, ArrayList<Meal>> {
 
     private String search_term = "";
     private URL url;
-    public ArrayList<Meal> meals;
+    public static ArrayList<Meal> meals;
+    private String api_key = FoodSearch.context.getResources().getString(R.string.api_key);
 
     // Creates an FoodSearch URI using an api_key and a search term
     // i.e.
     // https://api.nal.usda.gov/fdc/v1/search?api_key=YOUR_API_KEY&generalSearchInput=YOUR_INPUT
-    public ApiDownload(String search_term, Context context) {
+    public ApiDownload(String search_term) {
         this.search_term = search_term;
         Uri.Builder builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/search").buildUpon();
-        builder.appendQueryParameter("api_key", context.getResources().getString(R.string.api_key));
+        builder.appendQueryParameter("api_key", api_key);
         builder.appendQueryParameter("generalSearchInput", search_term);
 
         try {
@@ -43,9 +43,9 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
 
     // Begin drawing data from JSON objects
     @Override
-    protected ArrayList<String> doInBackground(Void... voids) {
+    protected ArrayList<Meal> doInBackground(Void... voids) {
         StringBuilder json = new StringBuilder();
-        ArrayList<String> foodDescription = new ArrayList<>();
+        ArrayList<Meal> meals = new ArrayList<>();
 
         String result = null;
         try {
@@ -60,12 +60,51 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
                 json.append(line);
             }
 
+            ArrayList<Ingredient> ingredients = new ArrayList<>();
             JSONObject reader = new JSONObject(json.toString());
             JSONArray foods = reader.getJSONArray("foods");
             for (int i = 0; i < foods.length(); i++) {
                 JSONObject food = foods.getJSONObject(i);
-                String descriptions = food.getString("description");
-                foodDescription.add(descriptions);
+                String description = food.getString("description");
+                int fdcId = food.getInt("fdcId");
+                Ingredient ingredient = new Ingredient(food.getString("ingredients"), fdcId);
+                ingredients.add(ingredient);
+
+                Uri.Builder builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/" + fdcId).buildUpon();
+                builder.appendQueryParameter("api_key", api_key);
+
+                try {
+                    url = new URL(builder.toString());
+                    Log.i("URL", String.valueOf(url));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
+                connection = (HttpsURLConnection) url.openConnection();
+                is = connection.getInputStream();
+
+                isr = new InputStreamReader(is);
+                br = new BufferedReader(isr);
+                json = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    json.append(line);
+                }
+
+                ArrayList<Nutrients> nutrients = new ArrayList<>();
+                reader = new JSONObject(json.toString());
+                JSONArray nutrientsObject = reader.getJSONArray("foodNutrients");
+                for (int j = 0; j < nutrientsObject.length(); j++) {
+                    JSONObject nutrientList = nutrientsObject.getJSONObject(j);
+                    int amount = nutrientList.getInt("amount");
+                    JSONObject nutrientDetails = nutrientList.getJSONObject("nutrient");
+                    String name = nutrientDetails.getString("name");
+                    String unit = nutrientDetails.getString("unitName");
+                    Nutrients nutrient = new Nutrients(name, amount, unit, fdcId);
+                    nutrients.add(nutrient);
+                }
+
+                Meal meal = new Meal(description, ingredients, nutrients, fdcId);
+                meals.add(meal);
             }
 
         } catch (MalformedURLException e) {
@@ -76,14 +115,28 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<String>> {
             e.printStackTrace();
         }
 
-        return foodDescription;
+        return meals;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<String> s) {
+    protected void onPostExecute(ArrayList<Meal> s) {
         for (int i = 0; i < s.size(); i++) {
-            Log.i("NAME", s.get(i));
+            ArrayList<Ingredient> ingredients = s.get(i).getIngredients();
+            ArrayList<Nutrients> nutrients = s.get(i).getNutrients();
+            Log.i("NAME", String.valueOf(s.get(i).getId() + " - " + s.get(i).getName()));
+            // For all meals, not just one specific meal
+            for (int j = 0; j < ingredients.size(); j++) {
+                if (ingredients.get(j).getMealId() == s.get(i).getId()) {
+                    Log.i("NAME - INGREDIENTS", ingredients.get(j).getName() + ": " + ingredients.get(j).isOwned());
+                }
+            }
+            for (int j = 0; j < nutrients.size(); j++) {
+                if (nutrients.get(j).getMealId() == s.get(i).getId()) {
+                    Log.i("NAME - NUTRIENTS", nutrients.get(j).getName() + ": " + nutrients.get(j).getAmount() + nutrients.get(j).getUnit());
+                }
+            }
         }
+        meals = s;
         FoodSearch.apiDownload = null;
     }
 }

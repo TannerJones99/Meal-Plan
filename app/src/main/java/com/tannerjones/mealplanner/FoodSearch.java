@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,15 @@ import java.util.ArrayList;
 public class FoodSearch extends AppCompatActivity {
 
     public static ApiDownload apiDownload = null;
-    MealAdapter mealAdapter;
-    ArrayList<Meal> meals = new ArrayList<>();
+    private MealAdapter mealAdapter;
+    private ArrayList<Meal> meals;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_meals);
+        context = getApplicationContext();
 
         final RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -37,9 +40,10 @@ public class FoodSearch extends AppCompatActivity {
             public void onClick(View v) {
                 EditText editText = findViewById(R.id.search_edit_text);
                 String search_term = editText.getText().toString();
-                apiDownload = new ApiDownload(search_term, getApplicationContext());
-                apiDownload.execute();
 
+                apiDownload = new ApiDownload(search_term);
+                apiDownload.execute();
+                meals = ApiDownload.meals;
                 mealAdapter = new MealAdapter();
                 recyclerView.setAdapter(mealAdapter);
             }
@@ -65,7 +69,6 @@ public class FoodSearch extends AppCompatActivity {
             Meal meal = meals.get(getAdapterPosition());
             AlertDialog.Builder builder = new AlertDialog.Builder(FoodSearch.this);
             builder.setMessage(meal.getName() + ", " + meal.getIngredients());
-
         }
     }
 
