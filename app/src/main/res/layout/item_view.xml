@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="30dp"
-    android:textSize="30sp">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="5dp"
+    android:layout_margin="5dp"
+    android:fontFamily="@font/delius_swash_caps"
+    android:textColor="#FFC165"
+    android:shadowColor="#000000"
+    android:shadowDx="1"
+    android:shadowDy="10"
+    android:shadowRadius="10"
+    android:textSize="15sp">
 
 </TextView>

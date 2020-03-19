@@ -2,7 +2,14 @@ package com.tannerjones.mealplanner;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,18 +25,19 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static com.tannerjones.mealplanner.FoodSearch.context;
+
 public class ApiDownload extends AsyncTask<Void, Void, ArrayList<Meal>> {
 
-    private String search_term = "";
     private URL url;
     public static ArrayList<Meal> meals;
-    private String api_key = FoodSearch.context.getResources().getString(R.string.api_key);
+    private String api_key = context.getResources().getString(R.string.api_key);
+    public String error = "";
 
     // Creates an FoodSearch URI using an api_key and a search term
     // i.e.
     // https://api.nal.usda.gov/fdc/v1/search?api_key=YOUR_API_KEY&generalSearchInput=YOUR_INPUT
     public ApiDownload(String search_term) {
-        this.search_term = search_term;
         Uri.Builder builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/search").buildUpon();
         builder.appendQueryParameter("api_key", api_key);
         builder.appendQueryParameter("generalSearchInput", search_term);
@@ -75,7 +83,6 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<Meal>> {
 
                 try {
                     url = new URL(builder.toString());
-                    Log.i("URL", String.valueOf(url));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -107,11 +114,7 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<Meal>> {
                 meals.add(meal);
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -120,23 +123,9 @@ public class ApiDownload extends AsyncTask<Void, Void, ArrayList<Meal>> {
 
     @Override
     protected void onPostExecute(ArrayList<Meal> s) {
-        for (int i = 0; i < s.size(); i++) {
-            ArrayList<Ingredient> ingredients = s.get(i).getIngredients();
-            ArrayList<Nutrients> nutrients = s.get(i).getNutrients();
-            Log.i("NAME", String.valueOf(s.get(i).getId() + " - " + s.get(i).getName()));
-            // For all meals, not just one specific meal
-            for (int j = 0; j < ingredients.size(); j++) {
-                if (ingredients.get(j).getMealId() == s.get(i).getId()) {
-                    Log.i("NAME - INGREDIENTS", ingredients.get(j).getName() + ": " + ingredients.get(j).isOwned());
-                }
-            }
-            for (int j = 0; j < nutrients.size(); j++) {
-                if (nutrients.get(j).getMealId() == s.get(i).getId()) {
-                    Log.i("NAME - NUTRIENTS", nutrients.get(j).getName() + ": " + nutrients.get(j).getAmount() + nutrients.get(j).getUnit());
-                }
-            }
-        }
         meals = s;
         FoodSearch.apiDownload = null;
+
+        FoodSearch.recyclerView.setAdapter(FoodSearch.mealAdapter);
     }
 }

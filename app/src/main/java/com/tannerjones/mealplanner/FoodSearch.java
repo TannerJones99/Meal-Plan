@@ -16,20 +16,24 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static com.tannerjones.mealplanner.ApiDownload.meals;
+
 public class FoodSearch extends AppCompatActivity {
 
     public static ApiDownload apiDownload = null;
-    private MealAdapter mealAdapter;
-    private ArrayList<Meal> meals;
     public static Context context;
+    public static RecyclerView recyclerView;
+    public static MealAdapter mealAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_meals);
         context = getApplicationContext();
+        mealAdapter = new MealAdapter();
 
-        final RecyclerView recyclerView = findViewById(R.id.recyclerview);
+
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -43,55 +47,81 @@ public class FoodSearch extends AppCompatActivity {
 
                 apiDownload = new ApiDownload(search_term);
                 apiDownload.execute();
-                meals = ApiDownload.meals;
-                mealAdapter = new MealAdapter();
-                recyclerView.setAdapter(mealAdapter);
             }
         });
-
     }
 
-    public class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView view;
-
-        public MealViewHolder(TextView view) {
-            super(view);
-            this.view = view;
-            this.view.setOnClickListener(this);
-        }
-
-        public TextView getView() {
-            return view;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Meal meal = meals.get(getAdapterPosition());
-            AlertDialog.Builder builder = new AlertDialog.Builder(FoodSearch.this);
-            builder.setMessage(meal.getName() + ", " + meal.getIngredients());
-        }
+    interface RecyclerViewClickListener {
+        public void onClick(View view, int position);
     }
 
-    public class MealAdapter extends RecyclerView.Adapter<MealViewHolder> {
+    public class MealAdapter extends RecyclerView.Adapter<FoodSearch.MealViewHolder>
+            implements RecyclerViewClickListener {
 
         @NonNull
         @Override
-        public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public FoodSearch.MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             TextView textView = (TextView) LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_view, parent, false);
-            MealViewHolder viewHolder = new MealViewHolder(textView);
+            FoodSearch.MealViewHolder viewHolder = new FoodSearch.MealViewHolder(textView, this);
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-            TextView view = holder.getView();
-            view.setText(meals.get(position).getName());
+        public void onBindViewHolder(@NonNull FoodSearch.MealViewHolder holder, int position) {
+            holder.view.setText(meals.get(position).getName());
         }
 
         @Override
         public int getItemCount() {
             return meals.size();
+        }
+
+        @Override
+        public void onClick(View view, int position) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(FoodSearch.this);
+            builder.setTitle(meals.get(position).getName());
+
+            ArrayList<Ingredient> ingredientsArrayList = meals.get(position).getIngredients();
+            StringBuilder ingredients = new StringBuilder();
+            ingredients.append("Ingredients:\n");
+            //Handle Ingredients
+            for (int i = 0; i < ingredientsArrayList.size(); i++) {
+                if (meals.get(position).getId() == ingredientsArrayList.get(i).getMealId()) {
+                    ingredients.append(meals.get(position).getIngredients().get(i).getName() + "\n");
+                }
+            }
+
+            ArrayList<Nutrients> nutrientsArrayList = meals.get(position).getNutrients();
+            StringBuilder nutrients = new StringBuilder();
+            nutrients.append("Nutrients:\n");
+            //Handle Nutrients
+            for (int i = 0; i < nutrientsArrayList.size(); i++) {
+                nutrients.append(meals.get(position).getNutrients().get(i).getName() + ": " +
+                meals.get(position).getNutrients().get(i).getAmount() +
+                meals.get(position).getNutrients().get(i).getUnit() + "\n");
+            }
+
+            builder.setMessage(ingredients + "\n" + nutrients);
+            builder.setPositiveButton("CLOSE", null);
+            builder.create().show();
+        }
+    }
+
+    public static class MealViewHolder extends RecyclerView.ViewHolder {
+        public TextView view;
+        public RecyclerViewClickListener listener;
+
+        public MealViewHolder(final TextView view, final MealAdapter listener) {
+            super(view);
+            this.view = view;
+            this.listener = listener;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(view, getAdapterPosition());
+                }
+            });
         }
     }
 }
