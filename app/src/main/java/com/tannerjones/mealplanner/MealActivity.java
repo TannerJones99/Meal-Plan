@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -204,7 +203,7 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
             Log.i("MEAL PLAN NOT FOUND", "Meal was not found");
         }
         else {
-            Intent intent = new Intent(getApplicationContext(), ViewMealsActicity.class);
+            Intent intent = new Intent(getApplicationContext(), ViewMealsActivity.class);
             intent.putExtra("MEAL", plan);
             startActivity(intent);
         }

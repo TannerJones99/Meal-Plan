@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ViewMealsActicity extends AppCompatActivity {
+public class ViewMealsActivity extends AppCompatActivity {
 
     MealPlan plan;
     ArrayList<Meal> meals;
@@ -22,6 +22,7 @@ public class ViewMealsActicity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.mealviewlayout);
         Intent intent = getIntent();
         plan = (MealPlan) intent.getSerializableExtra("MEAL");
         list = plan.getMealsList();
