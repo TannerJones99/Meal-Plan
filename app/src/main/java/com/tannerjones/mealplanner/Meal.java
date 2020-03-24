@@ -1,12 +1,13 @@
 package com.tannerjones.mealplanner;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
 This class will contain all information for a specific meal and handle all functions that meals need to handle.
  */
 
-public class Meal {
+public class Meal implements Serializable {
     private String name;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Nutrients> nutrients;

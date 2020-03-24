@@ -1,6 +1,8 @@
 package com.tannerjones.mealplanner;
 
-public class Nutrients {
+import java.io.Serializable;
+
+public class Nutrients implements Serializable {
     private String name;
     private int amount;
     private int mealId;

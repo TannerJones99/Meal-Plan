@@ -4,9 +4,10 @@ package com.tannerjones.mealplanner;
 This class will read meals from a file and handle the list of meals.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MealList {
+public class MealList implements Serializable {
     private ArrayList<Meal> meals;
     private String MEAL_FILE = "File Path";
 
