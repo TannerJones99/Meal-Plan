@@ -1,6 +1,7 @@
 package com.tannerjones.mealplanner;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -91,17 +93,23 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    class MealPlanHolder extends RecyclerView.ViewHolder {
+    class MealPlanHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView view;
 
         public MealPlanHolder(@NonNull TextView itemView) {
             super(itemView);
             this.view = itemView;
+            this.view.setOnClickListener(this);
         }
 
         public TextView getView(){
             return view;
+        }
+
+        @Override
+        public void onClick(View view) {
+            mealListActivity(view);
         }
     }
 
@@ -183,8 +191,22 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    // function that will start an actiivity that will allow the user to see the list of meals in a meal plan.
-    public void mealListActivity(){
-
+    // function that will start an activity that will allow the user to see the list of meals in a meal plan.
+    public void mealListActivity(View view){
+        MealPlan plan = null;
+        TextView tv = (TextView) view;
+        for(int i = 0; i < mealPlans.size(); i++){
+            if(tv.getText().equals(mealPlans.get(i).getName())){
+                plan = mealPlans.get(i);
+            }
+        }
+        if(plan == null){
+            Log.i("MEAL PLAN NOT FOUND", "Meal was not found");
+        }
+        else {
+            Intent intent = new Intent(getApplicationContext(), ViewMealsActicity.class);
+            intent.putExtra("MEAL", plan);
+            startActivity(intent);
+        }
     }
 }
