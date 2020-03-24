@@ -12,7 +12,6 @@ public class MealList {
 
     public MealList(){
         UpdateMeals();
-
     }
 
     public boolean UpdateMeals(){
@@ -20,5 +19,9 @@ public class MealList {
         meals = new ArrayList<>();
 
         return true;
+    }
+
+    public ArrayList<Meal> getMeals() {
+        return meals;
     }
 }

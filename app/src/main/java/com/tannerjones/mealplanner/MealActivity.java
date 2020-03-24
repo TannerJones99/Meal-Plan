@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class MealActivity extends AppCompatActivity implements View.OnClickListener {
@@ -174,11 +173,6 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    // returns the list of meal plans
-    public ArrayList<MealPlan> getMealPlans() {
-        return mealPlans;
-    }
-
     public void deleteMealByName(String name){
         for(int i = 0; i < mealPlans.size(); i++){
             if(mealPlans.get(i).getName().equals(name)){
@@ -187,5 +181,10 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
                 mealPlanAdapter.notifyItemRangeChanged(i, mealPlans.size());
             }
         }
+    }
+
+    // function that will start an actiivity that will allow the user to see the list of meals in a meal plan.
+    public void mealListActivity(){
+
     }
 }

@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".FoodSearch"/>
         <activity android:name=".MealActivity"/>
+        <activity android:name=".ViewMealsActicity"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 public class MealPlan {
     private String name;
-    private ArrayList<MealList> mealsList;
+    private MealList mealsList;
 
     public MealPlan(String name) {
         this.name = name;
-        mealsList = new ArrayList<>();
+        mealsList = new MealList();
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<MealList> getMealsList() {
+    public MealList getMealsList() {
         return mealsList;
     }
 
