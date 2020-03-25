@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class MealList implements Serializable {
     private ArrayList<Meal> meals;
-    private String MEAL_FILE = "File Path";
 
     public MealList(){
         UpdateMeals();
