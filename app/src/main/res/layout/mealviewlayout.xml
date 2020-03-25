@@ -11,7 +11,7 @@
         android:id="@+id/editMeal"
         android:layout_width="165dp"
         android:layout_height="56dp"
-        android:text="Add Meal Plan"
+        android:text="Edit Meal Plan"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -19,7 +19,7 @@
         android:id="@+id/removeMeal"
         android:layout_width="165dp"
         android:layout_height="56dp"
-        android:text="Remove Meal Plan"
+        android:text="Remove Meal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
