@@ -8,19 +8,12 @@
 
 
     <Button
-        android:id="@+id/editMeal"
-        android:layout_width="165dp"
-        android:layout_height="56dp"
-        android:text="Edit Meal Plan"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
         android:id="@+id/removeMeal"
-        android:layout_width="165dp"
-        android:layout_height="56dp"
+        android:layout_width="376dp"
+        android:layout_height="54dp"
         android:text="Remove Meal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
