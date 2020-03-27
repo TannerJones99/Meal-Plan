@@ -207,6 +207,7 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
         else {
             Intent intent = new Intent(getApplicationContext(), ViewMealsActivity.class);
             intent.putExtra("MEAL", plan);
+            intent.putExtra("PLAN", mealPlans);
             startActivity(intent);
         }
     }
