@@ -46,7 +46,6 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i("Started", "onStart");
         rv = findViewById(R.id.MealPlanRv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
@@ -202,7 +201,7 @@ public class MealActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         if(plan == null){
-            Log.i("MEAL PLAN NOT FOUND", "Meal was not found");
+            Log.i("MEAL PLAN NOT FOUND", "Meal Plan was not found");
         }
         else {
             Intent intent = new Intent(getApplicationContext(), ViewMealsActivity.class);

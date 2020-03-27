@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,11 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ViewMealsActivity extends AppCompatActivity {
+public class ViewMealsActivity extends AppCompatActivity implements View.OnClickListener {
 
     MealPlan plan;
     ArrayList<Meal> meals;
@@ -26,6 +29,8 @@ public class ViewMealsActivity extends AppCompatActivity {
     ArrayList<MealPlan> plans;
     String planToRemove;
     MealViewAdapter mealViewAdapter;
+    Button removeButton;
+    RecyclerView rv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +41,26 @@ public class ViewMealsActivity extends AppCompatActivity {
         plans = (ArrayList<MealPlan>) intent.getSerializableExtra("PLAN");
         list = plan.getMealsList();
         meals = list.getMeals();
+        removeButton = findViewById(R.id.removeMeal);
+        removeButton.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        rv = findViewById(R.id.MealPlanRv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rv.setLayoutManager(linearLayoutManager);
+        mealViewAdapter = new MealViewAdapter();
+        rv.setAdapter(mealViewAdapter);
+        mealViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if((Button) view == findViewById(R.id.removeMeal)){
+            removeMeal();
+        }
     }
 
     class MealViewAdapter extends RecyclerView.Adapter<MealViewHolder> {
@@ -60,7 +85,7 @@ public class ViewMealsActivity extends AppCompatActivity {
         }
     }
 
-    class MealViewHolder extends RecyclerView.ViewHolder {
+    class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView view;
 
@@ -71,6 +96,11 @@ public class ViewMealsActivity extends AppCompatActivity {
 
         public TextView getView(){
             return view;
+        }
+
+        @Override
+        public void onClick(View view) {
+            mealInfoActivity(view);
         }
     }
 
@@ -123,4 +153,24 @@ public class ViewMealsActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void mealInfoActivity(View view){
+        Meal meal = null;
+        TextView tv = (TextView) view;
+        for(int i = 0; i < meals.size(); i++){
+            if(tv.getText().equals(meals.get(i).getName())){
+                meal = meals.get(i);
+            }
+        }
+        if(meal == null){
+            Log.i("MEAL NOT FOUND", "Meal was not found");
+        }
+        else{
+            Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
+            intent.putExtra("MEAL", meal);
+            startActivity(intent);
+        }
+    }
+
+
 }
