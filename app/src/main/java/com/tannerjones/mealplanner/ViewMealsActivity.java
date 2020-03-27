@@ -48,7 +48,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
-        rv = findViewById(R.id.MealPlanRv);
+        rv = findViewById(R.id.MealRv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
         mealViewAdapter = new MealViewAdapter();
