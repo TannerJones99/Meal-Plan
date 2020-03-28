@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import static com.tannerjones.mealplanner.ApiDownload.meals;
 
@@ -79,12 +78,16 @@ public class FoodSearch extends AppCompatActivity {
 
         @Override
         public void onClick(View view, int position) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(FoodSearch.this);
-            builder.setTitle(meals.get(position).getName());
+            Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
+            intent.putExtra("MEAL", meals.get(position));
+            startActivity(intent);
+
+            /*
 
             ArrayList<Ingredient> ingredientsArrayList = meals.get(position).getIngredients();
             StringBuilder ingredients = new StringBuilder();
             ingredients.append("Ingredients:\n");
+
             //Handle Ingredients
             for (int i = 0; i < ingredientsArrayList.size(); i++) {
                 if (meals.get(position).getId() == ingredientsArrayList.get(i).getMealId()) {
@@ -95,16 +98,14 @@ public class FoodSearch extends AppCompatActivity {
             ArrayList<Nutrients> nutrientsArrayList = meals.get(position).getNutrients();
             StringBuilder nutrients = new StringBuilder();
             nutrients.append("Nutrients:\n");
+
             //Handle Nutrients
             for (int i = 0; i < nutrientsArrayList.size(); i++) {
                 nutrients.append(meals.get(position).getNutrients().get(i).getName() + ": " +
                 meals.get(position).getNutrients().get(i).getAmount() +
                 meals.get(position).getNutrients().get(i).getUnit() + "\n");
             }
-
-            builder.setMessage(ingredients + "\n" + nutrients);
-            builder.setPositiveButton("CLOSE", null);
-            builder.create().show();
+            */
         }
     }
 

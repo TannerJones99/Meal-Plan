@@ -36,13 +36,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mealNutrientsTv" />
+        app:layout_constraintTop_toBottomOf="@+id/mealNutrientsTv" >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ingredientsRecycler"
-        android:layout_width="409dp"
-        android:layout_height="281dp"
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/ingTextview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:fontFamily="@font/delius_swash_caps"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="5dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="10"
+        android:shadowRadius="10"
+        android:textColor="#FFC165"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mealIngridentsTv" />
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Meal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
