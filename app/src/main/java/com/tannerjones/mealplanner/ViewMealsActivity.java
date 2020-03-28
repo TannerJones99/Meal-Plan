@@ -132,12 +132,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
                 }
             });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Log.i("Cancel", "Cancelled remove");
-                }
-            });
+            builder.setNegativeButton("Cancel", null);
 
             AlertDialog dialog = builder.create();
             dialog.show();
