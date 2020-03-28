@@ -22,9 +22,9 @@ import java.util.ArrayList;
 public class MealInfoActivity extends AppCompatActivity {
 
     RecyclerView nutRV;
-    RecyclerView ingRV;
     Meal meal;
     MealNutAdapter mealNutAdapter;
+    Integer btn;
     private ArrayList<MealPlan> mealPlans;
 
     @Override
@@ -34,6 +34,12 @@ public class MealInfoActivity extends AppCompatActivity {
         setContentView(R.layout.mealinfolayout);
         Intent intent = getIntent();
         meal = (Meal) intent.getSerializableExtra("MEAL");
+        btn = (Integer) intent.getSerializableExtra("BTN");
+
+        if (btn == 0) {
+            findViewById(R.id.addButton).setVisibility(View.GONE);
+        }
+
     }
 
     @Override

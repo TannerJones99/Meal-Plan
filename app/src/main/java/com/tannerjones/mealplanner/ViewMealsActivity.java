@@ -63,20 +63,25 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    class MealViewAdapter extends RecyclerView.Adapter<MealViewHolder> {
+    class MealViewAdapter extends RecyclerView.Adapter<MealViewHolder>
+            implements RecyclerViewClickListener {
 
         @NonNull
         @Override
         public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
-            MealViewHolder mealViewHolder = new MealViewHolder(textView);
+            MealViewHolder mealViewHolder = new MealViewHolder(textView, this);
             return mealViewHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-            TextView view = holder.getView();
-            view.setText(meals.get(position).getName());
+            holder.view.setText(meals.get(position).getName());
+        }
+
+        @Override
+        public void onClick(View view, int position) {
+            mealInfoActivity(view, position);
         }
 
         @Override
@@ -85,23 +90,27 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MealViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView view;
+        public TextView view;
+        public RecyclerViewClickListener listener;
 
-        public MealViewHolder(@NonNull TextView itemView) {
-            super(itemView);
-            this.view = itemView;
+        public MealViewHolder(final TextView view, final MealViewAdapter listener) {
+            super(view);
+            this.view = view;
+            this.listener = listener;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(view, getAdapterPosition());
+                }
+            });
         }
 
-        public TextView getView(){
-            return view;
-        }
+    }
 
-        @Override
-        public void onClick(View view) {
-            mealInfoActivity(view);
-        }
+    interface RecyclerViewClickListener {
+        public void onClick(View view, int position);
     }
 
     public void removeMeal(){
@@ -149,22 +158,11 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    public void mealInfoActivity(View view){
-        Meal meal = null;
-        TextView tv = (TextView) view;
-        for(int i = 0; i < meals.size(); i++){
-            if(tv.getText().equals(meals.get(i).getName())){
-                meal = meals.get(i);
-            }
-        }
-        if(meal == null){
-            Log.i("MEAL NOT FOUND", "Meal was not found");
-        }
-        else{
-            Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
-            intent.putExtra("MEAL", meal);
-            startActivity(intent);
-        }
+    public void mealInfoActivity(View view, int position){
+        Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
+        intent.putExtra("MEAL", meals.get(position));
+        intent.putExtra("BTN", 0);
+        startActivity(intent);
     }
 
 

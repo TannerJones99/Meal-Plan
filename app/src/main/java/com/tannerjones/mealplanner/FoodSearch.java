@@ -1,7 +1,6 @@
 package com.tannerjones.mealplanner;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,20 +53,20 @@ public class FoodSearch extends AppCompatActivity {
         public void onClick(View view, int position);
     }
 
-    public class MealAdapter extends RecyclerView.Adapter<FoodSearch.MealViewHolder>
+    public class MealAdapter extends RecyclerView.Adapter<MealViewHolder>
             implements RecyclerViewClickListener {
 
         @NonNull
         @Override
-        public FoodSearch.MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             TextView textView = (TextView) LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_view, parent, false);
-            FoodSearch.MealViewHolder viewHolder = new FoodSearch.MealViewHolder(textView, this);
+            MealViewHolder viewHolder = new MealViewHolder(textView, this);
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull FoodSearch.MealViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
             holder.view.setText(meals.get(position).getName());
         }
 
@@ -80,32 +79,8 @@ public class FoodSearch extends AppCompatActivity {
         public void onClick(View view, int position) {
             Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
             intent.putExtra("MEAL", meals.get(position));
+            intent.putExtra("BTN", 1);
             startActivity(intent);
-
-            /*
-
-            ArrayList<Ingredient> ingredientsArrayList = meals.get(position).getIngredients();
-            StringBuilder ingredients = new StringBuilder();
-            ingredients.append("Ingredients:\n");
-
-            //Handle Ingredients
-            for (int i = 0; i < ingredientsArrayList.size(); i++) {
-                if (meals.get(position).getId() == ingredientsArrayList.get(i).getMealId()) {
-                    ingredients.append(meals.get(position).getIngredients().get(i).getName() + "\n");
-                }
-            }
-
-            ArrayList<Nutrients> nutrientsArrayList = meals.get(position).getNutrients();
-            StringBuilder nutrients = new StringBuilder();
-            nutrients.append("Nutrients:\n");
-
-            //Handle Nutrients
-            for (int i = 0; i < nutrientsArrayList.size(); i++) {
-                nutrients.append(meals.get(position).getNutrients().get(i).getName() + ": " +
-                meals.get(position).getNutrients().get(i).getAmount() +
-                meals.get(position).getNutrients().get(i).getUnit() + "\n");
-            }
-            */
         }
     }
 
