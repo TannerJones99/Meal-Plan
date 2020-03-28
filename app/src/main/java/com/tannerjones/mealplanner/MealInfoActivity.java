@@ -60,38 +60,26 @@ public class MealInfoActivity extends AppCompatActivity {
         findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MealInfoActivity.this);
+                builder.setTitle("Add to Meal Plan");
 
                 // Converting names of meals plans to a String[];
                 String[] listOfMeals = new String[mealPlans.size()];
                 for (int i = 0; i < mealPlans.size(); i++) {
                     listOfMeals[i] = mealPlans.get(i).getName();
-                    Log.i("PLANS", mealPlans.get(i).getName());
                 }
                 int choice = -1;
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MealInfoActivity.this);
-                builder.setTitle(meal.getName());
                 builder.setSingleChoiceItems(listOfMeals, choice, null);
 
-
-                builder.setPositiveButton("Add Meal", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Add to Meal Plan", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ListView listView = ((AlertDialog) dialogInterface).getListView();
-                        Object checkedItem = listView.getAdapter().getItem(listView.getCheckedItemPosition());
-
-
-
-                        new MealSave().updateMealPlans(mealPlans, getApplicationContext());
+                        mealPlans.get(listView.getCheckedItemPosition()).getMealsList().addMealToList(meal, mealPlans, getApplicationContext());
                     }
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.i("Cancel", "Cancelled remove");
-                    }
-                });
+                builder.setNegativeButton("Cancel", null);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
