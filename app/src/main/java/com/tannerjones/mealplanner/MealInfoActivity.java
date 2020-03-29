@@ -106,7 +106,11 @@ public class MealInfoActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MealNutHolder holder, int position) {
             TextView view = holder.getView();
-            view.setText(meal.getNutrients().get(position).getName());
+            view.setText(
+                    meal.getNutrients().get(position).getName() + ": " +
+                    meal.getNutrients().get(position).getAmount() +
+                    meal.getNutrients().get(position).getUnit()
+            );
         }
 
         @Override

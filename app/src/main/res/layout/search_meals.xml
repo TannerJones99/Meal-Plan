@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:fontFamily="@font/delius_swash_caps"
-        android:hint="Enter a Meal..."
+        android:hint="Search for a Meal..."
         android:inputType="text"
         android:shadowColor="#000000"
         android:shadowDx="1"
