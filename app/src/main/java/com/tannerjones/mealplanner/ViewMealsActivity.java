@@ -23,9 +23,7 @@ import java.util.ArrayList;
 
 public class ViewMealsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    MealPlan plan;
-    ArrayList<Meal> meals;
-    MealList list;
+    int plan;
     ArrayList<MealPlan> plans;
     String planToRemove;
     MealViewAdapter mealViewAdapter;
@@ -37,10 +35,13 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mealviewlayout);
         Intent intent = getIntent();
-        plan = (MealPlan) intent.getSerializableExtra("MEAL");
         plans = (ArrayList<MealPlan>) intent.getSerializableExtra("PLAN");
-        list = plan.getMealsList();
-        meals = list.getMeals();
+        for(int i = 0; i < plans.size(); i++){
+            if(plans.get(i).getName().equals(intent.getStringExtra("MEALPLANNAME"))){
+                plan = i;
+            }
+        }
+
         removeButton = findViewById(R.id.removeMeal);
         removeButton.setOnClickListener(this);
     }
@@ -76,7 +77,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
 
         @Override
         public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-            holder.view.setText(meals.get(position).getName());
+            holder.view.setText(plans.get(plan).getMealsList().getMeals().get(position).getName());
         }
 
         @Override
@@ -86,7 +87,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
 
         @Override
         public int getItemCount() {
-            return meals.size();
+            return plans.get(plan).getMealsList().getMeals().size();
         }
     }
 
@@ -114,7 +115,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void removeMeal(){
-        if(meals.size() == 0){
+        if(plans.get(plan).getMealsList().getMeals().size() == 0){
             Toast.makeText(getApplicationContext(), "No meals to delete", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -122,9 +123,9 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
             builder.setTitle("Remove Meal");
 
             // Converting names of meals plans to a String[];
-            String[] listOfMeals = new String[meals.size()];
-            for (int i = 0; i < meals.size(); i++) {
-                listOfMeals[i] = meals.get(i).getName();
+            String[] listOfMeals = new String[plans.get(plan).getMealsList().getMeals().size()];
+            for (int i = 0; i < plans.get(plan).getMealsList().getMeals().size(); i++) {
+                listOfMeals[i] = plans.get(plan).getMealsList().getMeals().get(i).getName();
             }
             int choice = -1;
             builder.setSingleChoiceItems(listOfMeals, choice, null);
@@ -149,18 +150,19 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void deleteMealByName(String name){
-        for(int i = 0; i < meals.size(); i++){
-            if(meals.get(i).getName().equals(name)){
-                meals.remove(meals.get(i));
+        for(int i = 0; i < plans.get(plan).getMealsList().getMeals().size(); i++){
+            if(plans.get(plan).getMealsList().getMeals().get(i).getName().equals(name)){
+                plans.get(plan).getMealsList().removeMealByName(name);
+                new MealSave().updateMealPlans(plans, getApplication());
                 mealViewAdapter.notifyItemRemoved(i);
-                mealViewAdapter.notifyItemRangeChanged(i, meals.size());
+                mealViewAdapter.notifyItemRangeChanged(i, plans.get(plan).getMealsList().getMeals().size());
             }
         }
     }
 
     public void mealInfoActivity(View view, int position){
         Intent intent = new Intent(getApplicationContext(), MealInfoActivity.class);
-        intent.putExtra("MEAL", meals.get(position));
+        intent.putExtra("MEAL", plans.get(plan).getMealsList().getMeals().get(position));
         intent.putExtra("BTN", 0);
         startActivity(intent);
     }
