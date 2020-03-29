@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
         android:fontFamily="@font/delius_swash_caps"
-        android:text="Create New Mealplan"
+        android:text="Search for Meals"
         android:textColor="#FFC165"
         android:textSize="20sp"
         android:shadowColor="#000000"
