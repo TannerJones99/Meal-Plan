@@ -20,4 +20,7 @@ public class MealPlan implements Serializable {
         return mealsList;
     }
 
+    public void setMealsList(MealList mealsList) {
+        this.mealsList = mealsList;
+    }
 }
