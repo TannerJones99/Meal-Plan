@@ -29,6 +29,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
     MealViewAdapter mealViewAdapter;
     Button removeButton;
     RecyclerView rv;
+    TextView planNameTV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
 
         removeButton = findViewById(R.id.removeMeal);
         removeButton.setOnClickListener(this);
+        planNameTV = findViewById(R.id.nomealsTV);
+        setTvText();
     }
 
     @Override
@@ -139,6 +142,7 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
                     planToRemove = (String) checkedItem;
                     deleteMealByName(planToRemove);
                     new MealSave().updateMealPlans(plans, getApplicationContext());
+                    setTvText();
                 }
             });
 
@@ -165,6 +169,15 @@ public class ViewMealsActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra("MEAL", plans.get(plan).getMealsList().getMeals().get(position));
         intent.putExtra("BTN", 0);
         startActivity(intent);
+    }
+
+    public void setTvText(){
+        if(plans.get(plan).getMealsList().getMeals().size() == 0){
+            planNameTV.setText("There are no meals in this plan. Try adding some in!");
+        }
+        else{
+            planNameTV.setText(plans.get(plan).getName());
+        }
     }
 
 
