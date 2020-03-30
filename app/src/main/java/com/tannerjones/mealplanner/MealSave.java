@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class MealSave {
-    private final String FILE_PATH ="MealsInfo.txt";
+    private final String FILE_PATH = "MealsInfo.txt";
 
     public void updateMealPlans(ArrayList<MealPlan> plans, Context context){
         try {
