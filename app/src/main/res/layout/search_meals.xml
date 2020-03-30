@@ -47,6 +47,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
